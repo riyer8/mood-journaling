@@ -26,7 +26,20 @@ export default function Journal() {
 
   async function analyzeEntry(text) {
     setLoading(true);
-    setSubmittedText(text); // Save full journal entry
+    setSubmittedText(text);
+
+    // Load existing entries from localStorage
+    const existingEntries = JSON.parse(localStorage.getItem("journalEntries") || "[]");
+
+    // Create new entry object (with date)
+    const newEntry = {
+      id: Date.now(),
+      text,
+      date: new Date().toISOString(),
+    };
+
+    // Save new array to localStorage
+    localStorage.setItem("journalEntries", JSON.stringify([newEntry, ...existingEntries]));
 
     try {
       const detectedEmotions = await detectEmotions(text);
@@ -38,6 +51,7 @@ export default function Journal() {
 
     setLoading(false);
   }
+
 
   return (
     <div className="flex h-screen bg-[#202123] text-white font-sans">
@@ -57,11 +71,12 @@ export default function Journal() {
             Journal Entry
           </Link>
           <Link
-            href="/history"
+            href="/search"
             className="px-3 py-2 rounded-md hover:bg-[#565869] transition"
           >
-            History
+            Search
           </Link>
+
           <Link
             href="/settings"
             className="px-3 py-2 rounded-md hover:bg-[#565869] transition"
