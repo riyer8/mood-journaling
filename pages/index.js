@@ -24,7 +24,7 @@ export default function Home() {
       <div className="text-center px-6">
         <h1 className="text-5xl font-bold mb-6">Mood Journal</h1>
         <p className="text-gray-400 text-lg mb-10 max-w-xl mx-auto">
-          Reflect on your day, understand your emotions, and grow your self-awareness.
+          Journal about your day and understand your emotions.
         </p>
         <button
           onClick={handleGetStarted}

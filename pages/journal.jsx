@@ -1,19 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Geist, Geist_Mono } from "next/font/google";
+import Link from "next/link";
 import { detectEmotions } from "../utils/emotionDetection";
 import EmotionTag from "../components/EmotionTag";
-
-const geistSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
-  display: "swap",
-});
 
 export default function Journal() {
   const [entry, setEntry] = useState("");
@@ -38,7 +26,7 @@ export default function Journal() {
 
   async function analyzeEntry(text) {
     setLoading(true);
-    setSubmittedText(text);
+    setSubmittedText(text); // Save full journal entry
 
     try {
       const detectedEmotions = await detectEmotions(text);
@@ -52,37 +40,40 @@ export default function Journal() {
   }
 
   return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} flex h-screen bg-[#202123] text-white`}
-      style={{ fontFamily: "var(--font-geist-sans), var(--font-geist-mono), sans-serif" }}
-    >
+    <div className="flex h-screen bg-[#202123] text-white font-sans">
       {/* Sidebar */}
       <aside className="w-60 bg-[#343541] flex flex-col p-4 space-y-4">
-        <h2 className="text-2xl font-bold mb-6 select-none">Mood Journal</h2>
+        <Link
+          href="/"
+          className="text-2xl font-bold mb-6 select-none transition transform hover:scale-[1.02] hover:bg-[#3d3e47] p-2 rounded-md text-white cursor-pointer"
+        >
+          Mood Journal
+        </Link>
         <nav className="flex flex-col space-y-2">
-          <a
+          <Link
             href="/journal"
             className="px-3 py-2 rounded-md bg-[#444654] hover:bg-[#565869] transition"
           >
             Journal Entry
-          </a>
-          <a
+          </Link>
+          <Link
             href="/history"
             className="px-3 py-2 rounded-md hover:bg-[#565869] transition"
           >
             History
-          </a>
-          <a
+          </Link>
+          <Link
             href="/settings"
             className="px-3 py-2 rounded-md hover:bg-[#565869] transition"
           >
             Settings
-          </a>
+          </Link>
         </nav>
         <div className="mt-auto text-gray-500 text-xs select-none">
           © 2025 Mood Journal
         </div>
       </aside>
+
 
       {/* Main content */}
       <main className="flex flex-col flex-grow p-8 overflow-auto">
@@ -107,7 +98,6 @@ export default function Journal() {
             placeholder="Write your journal entry here..."
             rows={10}
             className="bg-[#343541] border border-[#555867] rounded-md p-4 text-white text-lg placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            style={{ fontFamily: "var(--font-geist-mono), monospace" }}
           />
 
           <div className="flex justify-end mt-4">
