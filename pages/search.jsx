@@ -10,14 +10,13 @@ export default function Search() {
     setEntries(storedEntries);
   }, []);
 
-  // Filter entries by search term (case-insensitive)
+  // filter entries based off of searched word
   const filteredEntries = entries.filter((entry) =>
     entry.text.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="flex h-screen bg-[#202123] text-white font-sans">
-      {/* Sidebar */}
       <aside className="w-60 bg-[#343541] flex flex-col p-4 space-y-4">
         <Link href="/" className="text-2xl font-bold mb-6 select-none cursor-pointer">
           Mood Journal
@@ -38,7 +37,6 @@ export default function Search() {
         </div>
       </aside>
 
-      {/* Main content */}
       <main className="flex flex-col flex-grow p-8 overflow-auto">
         <header className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-semibold select-none">Search Your Journal</h1>

@@ -15,6 +15,7 @@ export default function Journal() {
     return () => clearInterval(timer);
   }, []);
 
+  // users can also hit enter to submit
   const handleKeyDown = async (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -28,17 +29,16 @@ export default function Journal() {
     setLoading(true);
     setSubmittedText(text);
 
-    // Load existing entries from localStorage
+    // entries in local storage
     const existingEntries = JSON.parse(localStorage.getItem("journalEntries") || "[]");
 
-    // Create new entry object (with date)
+    // new entry with current date and time
     const newEntry = {
       id: Date.now(),
       text,
       date: new Date().toISOString(),
     };
 
-    // Save new array to localStorage
     localStorage.setItem("journalEntries", JSON.stringify([newEntry, ...existingEntries]));
 
     try {
@@ -51,7 +51,6 @@ export default function Journal() {
 
     setLoading(false);
   }
-
 
   return (
     <div className="flex h-screen bg-[#202123] text-white font-sans">
@@ -89,16 +88,12 @@ export default function Journal() {
         </div>
       </aside>
 
-
-      {/* Main content */}
       <main className="flex flex-col flex-grow p-8 overflow-auto">
-        {/* Header */}
         <header className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-semibold select-none">How are you feeling today?</h1>
           <div className="text-gray-400 select-none">{dateTime.toLocaleString()}</div>
         </header>
 
-        {/* Journal Form */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -126,7 +121,6 @@ export default function Journal() {
           </div>
         </form>
 
-        {/* Results */}
         {(submittedText || emotions.length > 0) && (
           <section className="mt-8 max-w-3xl bg-[#2a2b32] rounded-md p-6">
             {submittedText && (
