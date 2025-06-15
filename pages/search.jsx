@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
+import Sidebar from "../components/Sidebar";
+import EmotionTag from "../components/EmotionTag";
 
 export default function Search() {
   const [entries, setEntries] = useState([]);
@@ -17,25 +18,7 @@ export default function Search() {
 
   return (
     <div className="flex h-screen bg-[#202123] text-white font-sans">
-      <aside className="w-60 bg-[#343541] flex flex-col p-4 space-y-4">
-        <Link href="/" className="text-2xl font-bold mb-6 select-none cursor-pointer">
-          Mood Journal
-        </Link>
-        <nav className="flex flex-col space-y-2">
-          <Link href="/journal" className="px-3 py-2 rounded-md hover:bg-[#565869] transition">
-            Journal Entry
-          </Link>
-          <Link href="/search" className="px-3 py-2 rounded-md bg-[#444654] hover:bg-[#565869] transition">
-            Search
-          </Link>
-          <Link href="/settings" className="px-3 py-2 rounded-md hover:bg-[#565869] transition">
-            Settings
-          </Link>
-        </nav>
-        <div className="mt-auto text-gray-500 text-xs select-none">
-          © 2025 Mood Journal
-        </div>
-      </aside>
+      <Sidebar activePage="search" />
 
       <main className="flex flex-col flex-grow p-8 overflow-auto">
         <header className="flex justify-between items-center mb-6">
@@ -56,8 +39,13 @@ export default function Search() {
           ) : (
             filteredEntries.map((entry) => (
               <div key={entry.id} className="mb-6 p-4 bg-[#2a2b32] rounded-md">
-                <div className="text-sm text-gray-400 mb-2">
-                  {new Date(entry.date).toLocaleString()}
+                <div className="flex items-center gap-2 flex-wrap text-sm text-gray-400 mb-2">
+                  <span>{new Date(entry.date).toLocaleString()}</span>
+                  <div className="flex gap-1 flex-wrap">
+                    {entry.emotions?.map((emotion, index) => (
+                      <EmotionTag key={index} emotion={emotion} />
+                    ))}
+                  </div>
                 </div>
                 <p className="whitespace-pre-line">{entry.text}</p>
               </div>
