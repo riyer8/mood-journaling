@@ -1,14 +1,26 @@
 import React, { useState, useEffect } from "react";
+import { Geist, Geist_Mono } from "next/font/google";
 import { detectEmotions } from "../utils/emotionDetection";
 import EmotionTag from "../components/EmotionTag";
 
+const geistSans = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist-sans",
+  display: "swap",
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+  display: "swap",
+});
 
 export default function Journal() {
   const [entry, setEntry] = useState("");
   const [dateTime, setDateTime] = useState(new Date());
-  const [title, setTitle] = useState("");
   const [emotions, setEmotions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [submittedText, setSubmittedText] = useState("");
 
   useEffect(() => {
     const timer = setInterval(() => setDateTime(new Date()), 1000);
@@ -26,11 +38,7 @@ export default function Journal() {
 
   async function analyzeEntry(text) {
     setLoading(true);
-
-    // Create a simple title from the first few words
-    const words = text.trim().split(/\s+/);
-    const generatedTitle = words.slice(0, 6).join(" ") + (words.length > 6 ? "..." : "");
-    setTitle(generatedTitle);
+    setSubmittedText(text);
 
     try {
       const detectedEmotions = await detectEmotions(text);
@@ -44,7 +52,10 @@ export default function Journal() {
   }
 
   return (
-    <div className="flex h-screen bg-[#202123] text-white font-sans">
+    <div
+      className={`${geistSans.variable} ${geistMono.variable} flex h-screen bg-[#202123] text-white`}
+      style={{ fontFamily: "var(--font-geist-sans), var(--font-geist-mono), sans-serif" }}
+    >
       {/* Sidebar */}
       <aside className="w-60 bg-[#343541] flex flex-col p-4 space-y-4">
         <h2 className="text-2xl font-bold mb-6 select-none">Mood Journal</h2>
@@ -69,19 +80,19 @@ export default function Journal() {
           </a>
         </nav>
         <div className="mt-auto text-gray-500 text-xs select-none">
-          © 2025 JournalApp
+          © 2025 Mood Journal
         </div>
       </aside>
 
       {/* Main content */}
       <main className="flex flex-col flex-grow p-8 overflow-auto">
-        {/* Header with date/time */}
+        {/* Header */}
         <header className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-semibold select-none">How are you feeling today?</h1>
           <div className="text-gray-400 select-none">{dateTime.toLocaleString()}</div>
         </header>
 
-        {/* Journal Input area */}
+        {/* Journal Form */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -96,6 +107,7 @@ export default function Journal() {
             placeholder="Write your journal entry here..."
             rows={10}
             className="bg-[#343541] border border-[#555867] rounded-md p-4 text-white text-lg placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            style={{ fontFamily: "var(--font-geist-mono), monospace" }}
           />
 
           <div className="flex justify-end mt-4">
@@ -109,17 +121,23 @@ export default function Journal() {
           </div>
         </form>
 
-        {/* Output */}
-        {(title || emotions.length > 0) && (
+        {/* Results */}
+        {(submittedText || emotions.length > 0) && (
           <section className="mt-8 max-w-3xl bg-[#2a2b32] rounded-md p-6">
-            <h2 className="text-xl font-semibold mb-2">Title</h2>
-            <p className="italic text-gray-300 mb-4">{title}</p>
+            {submittedText && (
+              <>
+                <h2 className="text-xl font-semibold mb-2">Journal Entry</h2>
+                <p className="text-gray-200 mb-4 whitespace-pre-line">
+                  {submittedText}
+                </p>
+              </>
+            )}
 
             <h2 className="text-xl font-semibold mb-2">Detected Emotions</h2>
             <div>
-                {emotions.map((e, i) => (
-                    <EmotionTag key={i} emotion={e} />
-                ))}
+              {emotions.map((e, i) => (
+                <EmotionTag key={i} emotion={e} />
+              ))}
             </div>
           </section>
         )}

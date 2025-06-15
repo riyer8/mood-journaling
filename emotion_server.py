@@ -1,14 +1,14 @@
-from fastapi import FastAPI, Request
-from pydantic import BaseModel
-from transformers import pipeline
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Request # type: ignore
+from pydantic import BaseModel # type: ignore
+from transformers import pipeline # type: ignore
+from fastapi.middleware.cors import CORSMiddleware # type: ignore
 
 app = FastAPI()
 
 # Allow CORS from your Next.js frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Restrict this in prod to your frontend URL
+    allow_origins=["*"],
     allow_methods=["POST"],
     allow_headers=["*"],
 )
@@ -17,7 +17,7 @@ class TextRequest(BaseModel):
     text: str
 
 # Load the transformers emotion classifier once on startup
-emotion_classifier = pipeline("text-classification", model="j-hartmann/emotion-english-distilroberta-base", return_all_scores=True)
+emotion_classifier = pipeline("text-classification", model="nateraw/bert-base-uncased-emotion", return_all_scores=True)
 
 @app.post("/detect_emotions")
 async def detect_emotions(req: TextRequest):

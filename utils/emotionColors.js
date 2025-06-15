@@ -1,10 +1,14 @@
-// utils/emotionColors.js
 export const emotionColors = {
-  joy: "#facc15",       // yellow
-  sadness: "#3b82f6",   // blue
-  anger: "#ef4444",     // red
-  fear: "#9333ea",      // purple
-  disgust: "#10b981",   // green
-  surprise: "#f97316",  // orange
-  neutral: "#6b7280",   // gray
+  anger: "#ef4444",         // red
+  anticipation: "#fbbf24",  // amber
+  disgust: "#10b981",       // green
+  fear: "#9333ea",          // purple
+  joy: "#facc15",           // yellow
+  love: "#ec4899",          // pink
+  optimism: "#34d399",      // teal
+  pessimism: "#f87171",     // lighter red
+  sadness: "#3b82f6",       // blue
+  surprise: "#f97316",      // orange
+  trust: "#22c55e",         // lime green
+  neutral: "#6b7280",       // gray fallback
 };
