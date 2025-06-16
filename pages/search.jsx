@@ -47,7 +47,21 @@ export default function Search() {
                     ))}
                   </div>
                 </div>
-                <p className="whitespace-pre-line">{entry.text}</p>
+
+                <p className="whitespace-pre-line mb-3">{entry.text}</p>
+
+                {entry.images?.length > 0 && (
+                  <div className="flex gap-2 flex-wrap">
+                    {entry.images.map((src, i) => (
+                      <img
+                        key={i}
+                        src={src}
+                        alt={`journal-img-${i}`}
+                        className="w-12 h-12 object-cover rounded"
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             ))
           )}
