@@ -27,7 +27,7 @@ export default function Search() {
 
         <input
           type="text"
-          placeholder="Search entries..."
+          placeholder="Search with any keywords"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="mb-6 p-3 rounded-md bg-[#343541] border border-[#555867] text-white text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"

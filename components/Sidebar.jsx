@@ -1,10 +1,19 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
-export default function Sidebar({ activePage, activeEntryId, setActiveEntryId, onNewEntry, entries: propEntries }) {
+export default function Sidebar({
+  activePage,
+  activeEntryId,
+  setActiveEntryId,
+  onNewEntry,
+  onSelectEntry,
+  entries: propEntries,
+}) {
   const baseLinkClasses = "px-3 py-2 rounded-md hover:bg-[#565869] transition";
   const activeLinkClasses = "bg-[#444654]";
   const [entries, setEntries] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     if (propEntries) {
@@ -26,11 +35,22 @@ export default function Sidebar({ activePage, activeEntryId, setActiveEntryId, o
     });
   }
 
+  function handleEntryClick(id) {
+    router.push(`/journal?entryId=${id}`);
+
+    if (setActiveEntryId) setActiveEntryId(id);
+    if (typeof onSelectEntry === "function") onSelectEntry(id);
+  }
+
   return (
     <aside className="w-60 bg-[#343541] flex flex-col p-4 space-y-4">
       <h2
         className="text-2xl font-bold mb-6 select-none cursor-pointer"
-        onClick={() => (window.location.href = "/")}
+        onClick={() => {
+          if (router.pathname !== "/journal") router.push("/journal");
+          if (setActiveEntryId) setActiveEntryId(null);
+          if (typeof onSelectEntry === "function") onSelectEntry(null);
+        }}
       >
         Mood Journal
       </h2>
@@ -42,7 +62,7 @@ export default function Sidebar({ activePage, activeEntryId, setActiveEntryId, o
               activePage === "journal" ? activeLinkClasses : ""
             }`}
           >
-            Journal Entry
+            Journal
           </a>
         </Link>
         <Link href="/search" legacyBehavior>
@@ -68,6 +88,7 @@ export default function Sidebar({ activePage, activeEntryId, setActiveEntryId, o
       {/* New Entry button */}
       <button
         onClick={() => {
+          if (router.pathname !== "/journal") router.push("/journal");
           if (onNewEntry) onNewEntry();
           if (setActiveEntryId) setActiveEntryId(null);
         }}
@@ -86,14 +107,22 @@ export default function Sidebar({ activePage, activeEntryId, setActiveEntryId, o
             {entries.map((entry) => (
               <li
                 key={entry.id}
-                onClick={() => setActiveEntryId && setActiveEntryId(entry.id)}
+                onClick={() => handleEntryClick(entry.id)}
                 className={`cursor-pointer px-2 py-2 mb-1 rounded-md hover:bg-[#565869] transition ${
                   activeEntryId === entry.id ? "bg-indigo-700" : ""
                 }`}
-                title={entry.text.length > 100 ? entry.text.slice(0, 100) + "…" : entry.text}
+                title={
+                  entry.text.length > 100
+                    ? entry.text.slice(0, 100) + "…"
+                    : entry.text
+                }
               >
-                <p className="text-sm truncate">{entry.text || "<Empty Entry>"}</p>
-                <time className="text-xs text-gray-400">{formatDate(entry.date)}</time>
+                <p className="text-sm truncate">
+                  {entry.text || "<Empty Entry>"}
+                </p>
+                <time className="text-xs text-gray-400">
+                  {formatDate(entry.date)}
+                </time>
               </li>
             ))}
           </ul>

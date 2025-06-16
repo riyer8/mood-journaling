@@ -10,4 +10,10 @@ npm run start:all
 
 Running into some errors with maximum photo storage upload.
 
-currently issues with sidebar not allowing to click on past entries to edit them. only allowed to click new entry on sidebar when on the journal page, and none of the other pages.
+next things to do:
+
+- delete entries from journal
+- in search, see if you can filter by emotion detection
+- for the settings, see if you can add spacing in the theme
+- the setting theme doesn't work right now.
+- in the search feature, if you click on an entry, add a pop-up of the entry with a x sign in the corner that shows the journal entry

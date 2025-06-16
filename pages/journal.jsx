@@ -9,8 +9,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { detectEmotions } from "../utils/emotionDetection";
 import EmotionTag from "../components/EmotionTag";
 import Sidebar from "../components/Sidebar";
+import { useRouter } from "next/router";
 
 export default function Journal() {
+  const router = useRouter();
+
   // state management
   const [entry, setEntry] = useState("");
   const [images, setImages] = useState([]);
@@ -31,7 +34,7 @@ export default function Journal() {
     return () => clearInterval(timer);
   }, []);
 
-  // loads entires on page loading
+  // loads entries on page loading
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("journalEntries") || "[]");
     setEntries(stored);
@@ -39,6 +42,17 @@ export default function Journal() {
       setActiveEntryId(stored[0].id);
     }
   }, []);
+
+  // sync activeEntryId from URL query param
+  useEffect(() => {
+    const entryIdFromQuery = router.query.entryId;
+    if (entryIdFromQuery && entries.length > 0) {
+      const match = entries.find((e) => String(e.id) === String(entryIdFromQuery));
+      if (match) {
+        setActiveEntryId(match.id);
+      }
+    }
+  }, [router.query.entryId, entries]);
 
   // new entry --> populates new entries for each state
   useEffect(() => {
@@ -164,6 +178,7 @@ export default function Journal() {
         activePage="journal"
         entries={entries}
         activeEntryId={activeEntryId}
+        setActiveEntryId={setActiveEntryId}
         onSelectEntry={setActiveEntryId}
         onNewEntry={handleNewEntry}
       />
@@ -211,7 +226,10 @@ export default function Journal() {
           {images.length > 0 && (
             <div className="flex gap-3 flex-wrap mt-4">
               {images.map((src, i) => (
-                <div key={i} className="relative w-20 h-20 rounded overflow-hidden border border-gray-600">
+                <div
+                  key={i}
+                  className="relative w-20 h-20 rounded overflow-hidden border border-gray-600"
+                >
                   <img src={src} alt={`upload-${i}`} className="object-cover w-full h-full" />
                   <button
                     type="button"
@@ -241,7 +259,7 @@ export default function Journal() {
           <section className="mt-8 bg-[#2a2b32] rounded-md p-6">
             {submittedText && (
               <>
-                <h2 className="text-xl font-semibold mb-2">Journal Entry</h2>
+                <h2 className="text-xl font-semibold mb-2">Journal</h2>
                 <p className="text-gray-200 mb-4 whitespace-pre-line">{submittedText}</p>
               </>
             )}
