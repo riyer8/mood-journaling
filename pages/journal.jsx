@@ -1,9 +1,17 @@
+/* Main journal entry page
+- current journal entry text
+- image uploads
+- emotion analysis
+- display and edit past entries
+*/
+
 import React, { useState, useEffect, useRef } from "react";
 import { detectEmotions } from "../utils/emotionDetection";
 import EmotionTag from "../components/EmotionTag";
 import Sidebar from "../components/Sidebar";
 
 export default function Journal() {
+  // state management
   const [entry, setEntry] = useState("");
   const [images, setImages] = useState([]);
   const [dateTime, setDateTime] = useState(new Date());
@@ -17,13 +25,13 @@ export default function Journal() {
 
   const fileInputRef = useRef();
 
-  // Update date/time every second
+  // date and time for entries
   useEffect(() => {
     const timer = setInterval(() => setDateTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  // Load entries from localStorage on mount
+  // loads entires on page loading
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("journalEntries") || "[]");
     setEntries(stored);
@@ -32,7 +40,7 @@ export default function Journal() {
     }
   }, []);
 
-  // Load active entry data into form and submitted states
+  // new entry --> populates new entries for each state
   useEffect(() => {
     if (activeEntryId === null) {
       clearForm();
@@ -48,7 +56,7 @@ export default function Journal() {
     }
   }, [activeEntryId, entries]);
 
-  // Clear form and states (for new entry)
+  // clears form when new entry is called
   function clearForm() {
     setEntry("");
     setImages([]);
@@ -57,7 +65,7 @@ export default function Journal() {
     setSubmittedImages([]);
   }
 
-  // Handle Enter key to submit
+  // allows user to hit enter to submit entry
   const handleKeyDown = async (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -67,7 +75,7 @@ export default function Journal() {
     }
   };
 
-  // Handle files dropped or selected
+  // drag and drop photos
   const handleFiles = (files) => {
     const fileArr = Array.from(files);
     const readers = fileArr.map(
@@ -83,12 +91,11 @@ export default function Journal() {
     });
   };
 
-  // Handle image upload input change
   const handleImageUpload = (e) => {
     handleFiles(e.target.files);
   };
 
-  // Handle drag and drop images
+  // drag and drop entry
   const handleDrop = (e) => {
     e.preventDefault();
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
@@ -96,18 +103,16 @@ export default function Journal() {
       e.dataTransfer.clearData();
     }
   };
-
-  // Prevent default dragover to allow drop
   const handleDragOver = (e) => {
     e.preventDefault();
   };
 
-  // Remove image preview before submit
+  // removes image for preview
   const removeImage = (idx) => {
     setImages((prev) => prev.filter((_, i) => i !== idx));
   };
 
-  // Submit or update entry
+  // analyzes emotion, updates and create entry, refreshes UI
   async function analyzeEntry(text) {
     setLoading(true);
 
@@ -117,14 +122,12 @@ export default function Journal() {
 
       let updatedEntries;
       if (activeEntryId) {
-        // Update existing
         updatedEntries = entries.map((e) =>
           e.id === activeEntryId
             ? { ...e, text, emotions: detectedEmotions, images }
             : e
         );
       } else {
-        // Add new
         const newEntry = {
           id: Date.now(),
           text,
@@ -139,7 +142,6 @@ export default function Journal() {
       localStorage.setItem("journalEntries", JSON.stringify(updatedEntries));
       setEntries(updatedEntries);
 
-      // Update submitted states for display
       setSubmittedText(text);
       setSubmittedImages(images);
     } catch (error) {
@@ -150,7 +152,7 @@ export default function Journal() {
     setLoading(false);
   }
 
-  // Start a new blank entry
+  // new entry
   const handleNewEntry = () => {
     setActiveEntryId(null);
     clearForm();

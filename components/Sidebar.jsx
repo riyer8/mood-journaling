@@ -6,7 +6,6 @@ export default function Sidebar({ activePage, activeEntryId, setActiveEntryId, o
   const activeLinkClasses = "bg-[#444654]";
   const [entries, setEntries] = useState([]);
 
-  // Use entries passed as prop if available; otherwise load from localStorage
   useEffect(() => {
     if (propEntries) {
       setEntries(propEntries);

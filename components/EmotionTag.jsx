@@ -1,4 +1,3 @@
-// components/EmotionTag.jsx
 import React from "react";
 import { emotionColors } from "../utils/emotionColors";
 
