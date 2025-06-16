@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 
-// Utility: Detect system theme
 const getSystemTheme = () =>
   window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 
-// Apply theme to <html>
 const applyTheme = (mode) => {
   const root = document.documentElement;
 
-  // Remove both first
   root.classList.remove("dark");
   root.classList.remove("light");
 
@@ -53,7 +50,7 @@ export default function Settings() {
       <main className="flex flex-col flex-grow p-8 overflow-auto">
         <h1 className="text-3xl font-semibold mb-8 select-none">Settings</h1>
 
-        {/* Theme Settings */}
+        {/* settings for the theme */}
         <div className="mb-8 max-w-md bg-[#2a2b32] p-6 rounded-md space-y-4">
           <label htmlFor="theme" className="block text-lg font-medium">
             Theme
@@ -83,7 +80,7 @@ export default function Settings() {
 
         </div>
 
-        {/* Clear entries */}
+        {/* clear all the entries */}
         <div className="max-w-md">
           <button
             onClick={handleClearEntries}
